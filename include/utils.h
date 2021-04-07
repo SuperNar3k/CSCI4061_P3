@@ -18,7 +18,7 @@
 #define MaxWordLength 20
 #define maxFileNameLength 200
 
-
+queue_t* queue;
 /* file I/O */
 /**
  * Get a pointer to a opened file based on the file name

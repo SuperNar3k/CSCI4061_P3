@@ -41,9 +41,7 @@ int main(int argc, char *argv[]){
     bookeepingCode();
     
     //TODO: Initialize global variables, like shared queue
-    queue_t* queue = malloc(sizeof(queue_t));
-    queue->front = NULL;
-    queue->back = NULL;
+    
     //TODO: create producer and consumer threads
     pthread_t producerThread;
     pthread_t* consumerThreads = malloc(sizeof(pthread_t) * numConsumers);

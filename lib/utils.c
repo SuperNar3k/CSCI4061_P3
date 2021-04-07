@@ -2,7 +2,9 @@
 // pthread.h included in header.h
 
 // Feel free to add any functions or global variables
-
+queue_t* queue = malloc(sizeof(queue_t));
+    queue->front = NULL;
+    queue->back = NULL;
 /* File operations */
 void writeLineToFile(char *filepath, char *line) {
     int fd = open(filepath, O_CREAT | O_WRONLY | O_APPEND, 0777);
