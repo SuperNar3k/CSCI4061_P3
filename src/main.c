@@ -5,6 +5,12 @@
  * The path name should be output/result.txt
  */
 void writeFinalDSToFiles(void) {
+    char* filePath = "output/result.txt";
+    for (int i = 0; i < MaxWordLength; i++){
+        char line[chunkSize];
+        sprintf(line, "%d %d\n", i + 1, finalDS[i]);
+        writeLineToFile(filePath, line);
+    }
 }
 
 int printFlag, boundedFlag, numConsumers, queueSize;
@@ -18,7 +24,7 @@ int main(int argc, char *argv[]){
         printf("usage: %s <#Consumers> <inputFile> [option] [#queueSize]\n",argv[0]);
 		exit(EXIT_FAILURE);
     }
-
+    
     //Setup
     printFlag = 0;
     boundedFlag = 0;
@@ -41,12 +47,16 @@ int main(int argc, char *argv[]){
     bookeepingCode();
     
     //TODO: Initialize global variables, like shared queue
-    
+    queue = malloc(sizeof(queue_t));
+    queue->front = NULL;
+    queue->back = NULL;
+    queue->done = 0;
+
     //TODO: create producer and consumer threads
     pthread_t producerThread;
     pthread_t* consumerThreads = malloc(sizeof(pthread_t) * numConsumers);
 
-    pthread_create(&producerThread, NULL, producer, (void*) queue);
+    pthread_create(&producerThread, NULL, producer, (void*) inputFile);
 
     for (int i = 0; i < numConsumers; i++){
         pthread_create(&consumerThreads[i], NULL, consumer, (void*) queue);

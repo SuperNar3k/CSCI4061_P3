@@ -13,12 +13,37 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <semaphore.h>
+
 
 #define chunkSize 1024
 #define MaxWordLength 20
 #define maxFileNameLength 200
 
+typedef struct node{
+  char* line;
+  struct node* next;
+}node_t;
+
+typedef struct queue{
+  struct node* front;
+  struct node* back;
+  int size;
+  int done;
+}queue_t;
+
+
+int finalDS[MaxWordLength];
 queue_t* queue;
+pthread_mutex_t lock;
+sem_t slots;
+sem_t items;
+
+void enqueue(queue_t* queue, char* line);
+
+void dequeue(queue_t* queue, char* buf);
+
+
 /* file I/O */
 /**
  * Get a pointer to a opened file based on the file name
@@ -46,6 +71,8 @@ void writeLineToFile(char *filepath, char *line);
 
 /* directory */
 void bookeepingCode();
+
+
 
 
 #endif

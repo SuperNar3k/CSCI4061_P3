@@ -2,9 +2,43 @@
 // pthread.h included in header.h
 
 // Feel free to add any functions or global variables
-queue_t* queue = malloc(sizeof(queue_t));
-    queue->front = NULL;
+void enqueue(queue_t* queue, char* line){
+  node_t* newNode = malloc(sizeof(struct node));
+  int lineLen = strlen(line) + 1;
+  newNode->line = malloc(lineLen);
+  strcpy(newNode->line, line);
+  
+  newNode->next = NULL;
+  if(queue->front == NULL){ // queue is empty
+    queue->front = newNode;
+    queue->back = newNode;   
+  } 
+  else{
+    queue->back->next = newNode;
+    queue->back = newNode;
+  }
+  queue->size++;
+}
+
+void dequeue(queue_t* queue, char* buf){
+  if(queue->front == NULL){ // Queue is empty
+    return;
+  }
+
+  node_t* front = queue->front;
+  queue->front = queue->front->next;
+
+  strcpy(buf, front->line);
+  free(front->line);
+  free(front);
+
+  if(queue->front == NULL){ // There was only one item in the queue
     queue->back = NULL;
+  }
+
+  queue->size--;
+}
+
 /* File operations */
 void writeLineToFile(char *filepath, char *line) {
     int fd = open(filepath, O_CREAT | O_WRONLY | O_APPEND, 0777);
