@@ -13,10 +13,6 @@ void writeFinalDSToFiles(void) {
     }
 }
 
-int printFlag, boundedFlag, numConsumers, queueSize;
-char *inputFile;
-
-
 int main(int argc, char *argv[]){
     
     //Argument check
@@ -29,8 +25,8 @@ int main(int argc, char *argv[]){
     printFlag = 0;
     boundedFlag = 0;
     queueSize = 0;
-    inputFile = argv[2];
-    numConsumers = strtol(argv[1], NULL, 10);
+    char *inputFile = argv[2];
+    int numConsumers = strtol(argv[1], NULL, 10);
 
     //Option flag setup
     if(strcmp(argv[3], "-p") == 0) {
@@ -46,23 +42,25 @@ int main(int argc, char *argv[]){
 
     bookeepingCode();
     
-    //TODO: Initialize global variables, like shared queue
+    //Initialize global variables
     queue = malloc(sizeof(queue_t));
     queue->front = NULL;
     queue->back = NULL;
     queue->done = 0;
 
-    //TODO: create producer and consumer threads
+    //Create producer and consumer threads
     pthread_t producerThread;
     pthread_t* consumerThreads = malloc(sizeof(pthread_t) * numConsumers);
 
     pthread_create(&producerThread, NULL, producer, (void*) inputFile);
 
+    int *consumerIDs = malloc(numConsumers*sizeof(int));=
     for (int i = 0; i < numConsumers; i++){
-        pthread_create(&consumerThreads[i], NULL, consumer, (void*) queue);
+        *consumerIDs[i] = i;
+        pthread_create(&consumerThreads[i], NULL, consumer, consumerIDs[i]);
     }
 
-    //TODO: wait for all threads to complete execution
+    //Wait for all threads to complete execution
     pthread_join(producerThread, NULL);
     for (int i = 0; i < numConsumers; ++i){
         pthread_join(consumerThreads[i], NULL); //wait for all the threads to be finished

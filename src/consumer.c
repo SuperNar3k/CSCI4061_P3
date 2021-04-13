@@ -22,6 +22,9 @@ void parse(int* interDS){
 
 // consumer function
 void *consumer(void *arg){
+    if(printFlag) {
+        fprintf("consumer %d\n", *(int *)arg);
+    }
     int interDS[MaxWordLength];
 
     while(1){
@@ -32,11 +35,19 @@ void *consumer(void *arg){
             sem_post(&items);
             break;
         }
+        if(printFlag) {
+            //TODO!!!! FIX LINENUM SO IT ACTUALLY WORKS LMAO
+            fprintf("consumer %d: %d\n", *(int *)arg, lineNum);
+        }
         parse(interDS);
         pthread_mutex_unlock(&lock);
+
+        if(boundedFlag) {
+            sem_post(&slots);
+        }
     }
     
-    //TODO: update the global array
+    //Update the global array
     pthread_mutex_lock(&lock);
     for (int i = 0; i < MaxWordLength; i++){
         finalDS[i] += interDS[i];

@@ -23,6 +23,7 @@
 typedef struct node{
   char* line;
   struct node* next;
+  int lineNum;
 }node_t;
 
 typedef struct queue{
@@ -38,6 +39,8 @@ queue_t* queue;
 pthread_mutex_t lock;
 sem_t slots;
 sem_t items;
+
+int printFlag, boundedFlag, queueSize;
 
 void enqueue(queue_t* queue, char* line);
 
