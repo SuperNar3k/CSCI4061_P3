@@ -13,6 +13,10 @@ void *producer(void* arg){
     char line[chunkSize];
     FILE *fp = getFilePointer(inputFileName);
 
+    if(fp == NULL){
+        exit(EXIT_FAILURE); // error opening input file
+    }
+
     if(printFlag){
         fprintf(output, "producer\n");
     }

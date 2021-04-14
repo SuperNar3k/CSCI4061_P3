@@ -7,6 +7,10 @@
 void writeFinalDSToFiles(void) {
     char* filePath = "output/result.txt";
     FILE* fp = fopen(filePath, "w");
+
+    if(fp == NULL){
+		exit(EXIT_FAILURE); // error opening result file
+	}
     
     for (int i = 0; i < MaxWordLength; i++){
         char line[chunkSize];
@@ -62,28 +66,44 @@ int main(int argc, char *argv[]){
     queue->size = 0;
     output = fopen(logDir, "w");
 
-    pthread_mutex_init(&lock, NULL);
-    if(boundedFlag){
-        sem_init(&slots, 0, queueSize);
+    if(output == NULL){
+        exit(EXIT_FAILURE); // error opening log file
     }
-    sem_init(&items, 0, 0);
+
+    if(pthread_mutex_init(&lock, NULL) != 0){
+        exit(EXIT_FAILURE); // error initializing mutex lock
+	}
+    if(boundedFlag && sem_init(&slots, 0, queueSize) != 0){
+        exit(EXIT_FAILURE); // error initializing slots semaphore
+    }
+    if(sem_init(&items, 0, 0) != 0){
+        exit(EXIT_FAILURE); // error initializing items semaphore
+    }
 
     //Create producer and consumer threads
     pthread_t producerThread;
     pthread_t* consumerThreads = malloc(sizeof(pthread_t) * numConsumers);
 
-    pthread_create(&producerThread, NULL, producer, (void*) inputFile);
+    if(pthread_create(&producerThread, NULL, producer, (void*) inputFile) != 0){
+        exit(EXIT_FAILURE); // error creating producer
+    }
 
     int *consumerIDs = malloc(numConsumers*sizeof(int));
     for (int i = 0; i < numConsumers; i++){
         consumerIDs[i] = i;
-        pthread_create(&consumerThreads[i], NULL, consumer, &consumerIDs[i]);
+        if(pthread_create(&consumerThreads[i], NULL, consumer, &consumerIDs[i]) != 0){ 
+            exit(EXIT_FAILURE); // error creating consumer
+        }
     }
 
     //Wait for all threads to complete execution
-    pthread_join(producerThread, NULL);
+    if(pthread_join(producerThread, NULL) != 0){
+        exit(EXIT_FAILURE); // error joining producer
+    }
     for (int i = 0; i < numConsumers; ++i){
-        pthread_join(consumerThreads[i], NULL); //wait for all the threads to be finished
+        if (pthread_join(consumerThreads[i], NULL) != 0){ 
+            exit(EXIT_FAILURE); // error joining consumer
+        }
     } 
 
     //Write the final output
