@@ -1,18 +1,20 @@
 #include "consumer.h"
 
-/**
- * parse lines from the queue, and count words by word length
- * returns the line number of the item read from the queue
- */
+
+ // Parse lines from the queue, and count words by word length. Returns the line number of the item read from the queue.
+ 
+
 int parse(int* interDS){
+    // Initialize variables, store next data to be read into a node and also copy it into a string
     char line[chunkSize];
     node_t* node = dequeue(queue);
     strcpy(line, node->line);
-
+    // More initialization of variables
     int lineNum = node->lineNum;
     int wordLen = 0;
     int lineLen = strlen(line);
 
+    // Iterate through each line
     for (int i = 0; i < lineLen; i++){            
         // records the length of a word once whitespace or a newline is found
         if (line[i] == ' ' || line[i] == '\n'){
@@ -23,7 +25,9 @@ int parse(int* interDS){
         }
     }
 
-    interDS[wordLen - 1]++; // add length of the last word on the last line
+    // add length of the last word on the last line
+    interDS[wordLen - 1]++; 
+    // Free data
     free(node->line);
     free(node);
     return lineNum;
@@ -38,6 +42,7 @@ void *consumer(void *arg){
     }
     int interDS[MaxWordLength];
 
+    // Use semaphores and mutex locks to access the data and write to the histogram
     while(1){
         sem_wait(&items);
         pthread_mutex_lock(&lock);
