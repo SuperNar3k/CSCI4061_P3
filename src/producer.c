@@ -21,7 +21,7 @@ void *producer(void* arg){
 
     // reads while there are still lines in the file and adds them to the queue
     // uses semaphores and mutex locks to handle access of data
-    while(getLineFromFile(fp, line, chunkSize) != -1){ e
+    while(getLineFromFile(fp, line, chunkSize) != -1){
         if(boundedFlag){
             sem_wait(&slots);
         }

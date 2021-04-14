@@ -31,6 +31,10 @@ int main(int argc, char *argv[]){
     char *inputFile = argv[2];
     int numConsumers = strtol(argv[1], NULL, 10);
 
+    if(!isValidFile(inputFile)){
+        exit(EXIT_FAILURE);
+    }
+
     // clear out the array used to write to end file
     for (int i = 0; i < MaxWordLength; i++){
         finalDS[i] = 0;
@@ -39,15 +43,26 @@ int main(int argc, char *argv[]){
     // Optional flag setups
     if(argc > 3){
         if(strcmp(argv[3], "-p") == 0) {
-         printFlag = 1;
+            printFlag = 1;
         } 
         else if(strcmp(argv[3], "-b") == 0) {
             boundedFlag = 1;
-            queueSize = strtol(argv[4], NULL, 10);
-        } else if(strcmp(argv[3], "-bp") == 0) {
+            if(argc < 5){
+                queueSize = 10;
+            }
+            else {
+                queueSize = strtol(argv[4], NULL, 10);
+            }     
+        } 
+        else if(strcmp(argv[3], "-bp") == 0) {
             printFlag = 1;
             boundedFlag = 1;
-            queueSize = strtol(argv[4], NULL, 10);
+            if(argc < 5){
+                queueSize = 10;
+            }
+            else {
+                queueSize = strtol(argv[4], NULL, 10);
+            }     
         }
     }
     

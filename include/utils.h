@@ -47,7 +47,7 @@ void enqueue(queue_t* queue, char* line, int lineNum);
 
 node_t* dequeue(queue_t* queue);
 
-
+int isValidFile(char *inputFileName);
 /* file I/O */
 /**
  * Get a pointer to a opened file based on the file name

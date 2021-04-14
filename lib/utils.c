@@ -38,6 +38,11 @@ node_t* dequeue(queue_t* queue){
   return front;
 }
 
+int isValidFile(char* inputFileName){
+  struct stat sb;
+  return (stat(inputFileName, &sb) == 0 && S_ISREG(sb.st_mode));
+}
+
 /* File operations */
 void writeLineToFile(char *filepath, char *line) {
     int fd = open(filepath, O_CREAT | O_WRONLY | O_APPEND, 0777);
