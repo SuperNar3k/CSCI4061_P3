@@ -2,12 +2,17 @@
 
 /**
  * parse lines from the queue, and count words by word length
+ * returns the line number of the item read from the queue
  */
-void parse(int* interDS){
+int parse(int* interDS){
     char line[chunkSize];
-    dequeue(queue, line);
+    node_t* node = dequeue(queue);
+    strcpy(line, node->line);
+
+    int lineNum = node->lineNum;
     int wordLen = 0;
     int lineLen = strlen(line);
+
     for (int i = 0; i < lineLen; i++){            
         // records the length of a word once whitespace or a newline is found
         if (line[i] == ' ' || line[i] == '\n'){
@@ -17,13 +22,19 @@ void parse(int* interDS){
             wordLen++;
         }
     }
+
     interDS[wordLen - 1]++; // add length of the last word on the last line
+    free(node->line);
+    free(node);
+    return lineNum;
 }
 
 // consumer function
 void *consumer(void *arg){
+    int consumerID = *(int *) arg;
+
     if(printFlag) {
-        fprintf("consumer %d\n", *(int *)arg);
+        fprintf(output, "consumer %d\n", consumerID);
     }
     int interDS[MaxWordLength];
 
@@ -31,15 +42,18 @@ void *consumer(void *arg){
         sem_wait(&items);
         pthread_mutex_lock(&lock);
         if (queue->done && (queue->size <= 0)){ // producer has finished reading and the queue is empty
+            fprintf(output, "consumer %d: -1\n", consumerID);
             pthread_mutex_unlock(&lock);
             sem_post(&items);
             break;
         }
+
+        int lineNum = parse(interDS);
+
         if(printFlag) {
-            //TODO!!!! FIX LINENUM SO IT ACTUALLY WORKS LMAO
-            fprintf("consumer %d: %d\n", *(int *)arg, lineNum);
+            //printf("consumer %d: %d\n", consumerID, lineNum);
+            fprintf(output, "consumer %d: %d\n", consumerID, lineNum);
         }
-        parse(interDS);
         pthread_mutex_unlock(&lock);
 
         if(boundedFlag) {

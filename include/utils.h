@@ -33,8 +33,9 @@ typedef struct queue{
   int done;
 }queue_t;
 
-
+FILE* output;
 int finalDS[MaxWordLength];
+int test[MaxWordLength];
 queue_t* queue;
 pthread_mutex_t lock;
 sem_t slots;
@@ -42,9 +43,9 @@ sem_t items;
 
 int printFlag, boundedFlag, queueSize;
 
-void enqueue(queue_t* queue, char* line);
+void enqueue(queue_t* queue, char* line, int lineNum);
 
-void dequeue(queue_t* queue, char* buf);
+node_t* dequeue(queue_t* queue);
 
 
 /* file I/O */

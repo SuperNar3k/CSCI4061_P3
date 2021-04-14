@@ -2,13 +2,15 @@
 // pthread.h included in header.h
 
 // Feel free to add any functions or global variables
-void enqueue(queue_t* queue, char* line){
+void enqueue(queue_t* queue, char* line, int lineNum){
   node_t* newNode = malloc(sizeof(struct node));
   int lineLen = strlen(line) + 1;
   newNode->line = malloc(lineLen);
   strcpy(newNode->line, line);
   
   newNode->next = NULL;
+  newNode->lineNum = lineNum;
+
   if(queue->front == NULL){ // queue is empty
     queue->front = newNode;
     queue->back = newNode;   
@@ -20,23 +22,20 @@ void enqueue(queue_t* queue, char* line){
   queue->size++;
 }
 
-void dequeue(queue_t* queue, char* buf){
+node_t* dequeue(queue_t* queue){
   if(queue->front == NULL){ // Queue is empty
-    return;
+    return NULL;
   }
 
   node_t* front = queue->front;
   queue->front = queue->front->next;
-
-  strcpy(buf, front->line);
-  free(front->line);
-  free(front);
 
   if(queue->front == NULL){ // There was only one item in the queue
     queue->back = NULL;
   }
 
   queue->size--;
+  return front;
 }
 
 /* File operations */

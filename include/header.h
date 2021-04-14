@@ -5,10 +5,8 @@
 #include "producer.h"
 #include "consumer.h"
 
-
 char *finalDir = "output/result.txt";
 char *logDir = "output/log.txt";
-
 
 
 #endif
