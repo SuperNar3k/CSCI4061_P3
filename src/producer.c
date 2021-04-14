@@ -34,7 +34,9 @@ void *producer(void* arg){
     // cleanup and exit
     pthread_mutex_lock(&lock);
     queue->done = 1; // sets the done of the queue to be 1 to let consumers know the producer has reached the end of the file
-    fprintf(output, "producer: -1\n");
+    if(printFlag){
+        fprintf(output, "producer: -1\n");
+    }
     pthread_mutex_unlock(&lock);
     sem_post(&items);
     fclose(fp);
