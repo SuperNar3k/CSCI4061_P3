@@ -16,9 +16,10 @@ The program does something I guess.
 **Assumptions:**
 * Input file sizes can vary, and there is no limit.
 * Make sure there is an input file for the program to read.
-* Maximum size of a file path is 200 bytes
-* Mmaximum word length is 20
-* The chunk size to read lines will be atmost 1024 bytes
+* Maximum size of a file path is 200 bytes.
+* Mmaximum word length is 20.
+* The chunk size to read lines will be atmost 1024 bytes.
+* If the bounded buffer option is used, but no buffer size is inputted, it will default to a bounded size of 10.
 
 **Team names and x500s:** 
 * Yna Roxas (roxas007)
@@ -26,8 +27,8 @@ The program does something I guess.
 * Christopher Liu (liux3770)
 
 **Contribution:**
-* Yna Roxas: stream.c, reducer.c, part of README.md
-* Narek Ohanyan: documentation, mapreducer.c, part of README.md
-* Christopher Liu: mapper.c, getReducerTasks()
+* Yna Roxas: documentation, README.md, main.c
+* Narek Ohanyan: main.c, README.md, bounded buffer
+* Christopher Liu: getReducerTasks(), consumer.c, producer.c, header files
   
 We tried our best to divide and conquer this project equally, giving each other more work if needed to make our contributions equal and fair to each other.
